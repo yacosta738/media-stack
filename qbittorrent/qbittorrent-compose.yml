@@ -1,0 +1,25 @@
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:5.2.3
+    container_name: qbittorrent
+    network_mode: service:tailscale
+    depends_on:
+      tailscale:
+        condition: service_started
+    environment:
+      PUID: ${PUID:?PUID must be set}
+      PGID: ${PGID:?PGID must be set}
+      TZ: ${TZ:?TZ must be set}
+      WEBUI_PORT: 8080
+    volumes:
+      - ${CONFIG_ROOT:?CONFIG_ROOT must be set}/qbittorrent/config:/config
+      - ${DATA_ROOT:?DATA_ROOT must be set}/torrents:/data/torrents
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${TRAEFIK_NETWORK:-frontend}
+      - traefik.http.routers.qbittorrent.entrypoints=web,websecure
+      - traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${MEDIA_DOMAIN:?MEDIA_DOMAIN must be set}`)
+      - traefik.http.routers.qbittorrent.tls=true
+      - traefik.http.routers.qbittorrent.tls.certresolver=cloudflare
+      - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
+    restart: unless-stopped

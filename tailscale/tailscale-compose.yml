@@ -1,0 +1,31 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.98.9
+    container_name: tailscale
+    hostname: ${TAILSCALE_HOSTNAME:-media-stack}
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY:?TS_AUTHKEY must be set in .env or the shell}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_ACCEPT_DNS: ${TS_ACCEPT_DNS:-true}
+      TS_EXTRA_ARGS: ${TS_EXTRA_ARGS:?TS_EXTRA_ARGS must define the approved exit node}
+      TS_USERSPACE: ${TS_USERSPACE:-true}
+      TZ: ${TZ:?TZ must be set}
+    volumes:
+      - ${TS_STATE_DIR:?TS_STATE_DIR must be set}:/var/lib/tailscale
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    security_opt:
+      - label=disable
+    restart: unless-stopped
+    networks:
+      - frontend
+      - backend
+
+networks:
+  frontend:
+    name: ${TRAEFIK_NETWORK:-frontend}
+    external: true
+  backend:
+    name: ${TAILSCALE_NETWORK:-backend}
+    external: true

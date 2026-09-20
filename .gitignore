@@ -1,0 +1,22 @@
+# Runtime state and secrets
+.env
+.env.*
+!.env.example
+*.secret
+secrets/
+
+# Media and application state
+**/config/
+**/data/
+config/
+data/
+backups/
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/

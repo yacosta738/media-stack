@@ -1,0 +1,23 @@
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:2.3.0.5236-ls133
+    container_name: prowlarr
+    network_mode: service:tailscale
+    depends_on:
+      tailscale:
+        condition: service_started
+    environment:
+      PUID: ${PUID:?PUID must be set}
+      PGID: ${PGID:?PGID must be set}
+      TZ: ${TZ:?TZ must be set}
+    volumes:
+      - ${CONFIG_ROOT:?CONFIG_ROOT must be set}/prowlarr/config:/config
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${TRAEFIK_NETWORK:-frontend}
+      - traefik.http.routers.prowlarr.entrypoints=web,websecure
+      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${MEDIA_DOMAIN:?MEDIA_DOMAIN must be set}`)
+      - traefik.http.routers.prowlarr.tls=true
+      - traefik.http.routers.prowlarr.tls.certresolver=cloudflare
+      - traefik.http.services.prowlarr.loadbalancer.server.port=9696
+    restart: unless-stopped

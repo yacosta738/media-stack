@@ -1,0 +1,24 @@
+services:
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:1.6.1-development
+    container_name: bazarr
+    network_mode: service:tailscale
+    depends_on:
+      tailscale:
+        condition: service_started
+    environment:
+      PUID: ${PUID:?PUID must be set}
+      PGID: ${PGID:?PGID must be set}
+      TZ: ${TZ:?TZ must be set}
+    volumes:
+      - ${CONFIG_ROOT:?CONFIG_ROOT must be set}/bazarr/config:/config
+      - ${DATA_ROOT:?DATA_ROOT must be set}:/data
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${TRAEFIK_NETWORK:-frontend}
+      - traefik.http.routers.bazarr.entrypoints=web,websecure
+      - traefik.http.routers.bazarr.rule=Host(`bazarr.${MEDIA_DOMAIN:?MEDIA_DOMAIN must be set}`)
+      - traefik.http.routers.bazarr.tls=true
+      - traefik.http.routers.bazarr.tls.certresolver=cloudflare
+      - traefik.http.services.bazarr.loadbalancer.server.port=6767
+    restart: unless-stopped

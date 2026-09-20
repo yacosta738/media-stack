@@ -1,0 +1,16 @@
+name: ${COMPOSE_PROJECT_NAME:-media-stack}
+
+# The root compose is intentionally small: each service owns its compose file,
+# configuration mount and local directory. Compose merges all included files
+# into one project while preserving the old `/root/home/media/<service>` layout.
+#
+# Traefik remains the public entry point. The ARR services share Tailscale's
+# network namespace so their egress uses the configured remote exit node.
+
+include:
+  - path: ./tailscale/tailscale-compose.yml
+  - path: ./sonarr/sonarr-compose.yml
+  - path: ./radarr/radarr-compose.yml
+  - path: ./prowlarr/prowlarr-compose.yml
+  - path: ./bazarr/bazarr-compose.yml
+  - path: ./qbittorrent/qbittorrent-compose.yml
