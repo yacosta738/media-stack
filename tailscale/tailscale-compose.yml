@@ -8,13 +8,15 @@ services:
       TS_STATE_DIR: /var/lib/tailscale
       TS_ACCEPT_DNS: ${TS_ACCEPT_DNS:-true}
       TS_EXTRA_ARGS: ${TS_EXTRA_ARGS:?TS_EXTRA_ARGS must define the approved exit node}
-      TS_USERSPACE: ${TS_USERSPACE:-true}
+      TS_USERSPACE: ${TS_USERSPACE:-false}
       TZ: ${TZ:?TZ must be set}
     volumes:
       - ${TS_STATE_DIR:?TS_STATE_DIR must be set}:/var/lib/tailscale
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
     security_opt:
       - label=disable
     restart: unless-stopped
