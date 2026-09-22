@@ -16,6 +16,13 @@ backups/
 *.sqlite3
 *.log
 
+# Versioned Traefik configuration; ACME account state stays local and ignored.
+!traefik/
+!traefik/config/
+!traefik/config/**
+traefik/config/certs/*
+!traefik/config/certs/.gitkeep
+
 # OS/editor
 .DS_Store
 .vscode/

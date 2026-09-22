@@ -9,6 +9,7 @@ name: ${COMPOSE_PROJECT_NAME:-media-stack}
 
 include:
   - path: ./tailscale/tailscale-compose.yml
+  - path: ./traefik/traefik-compose.yml
   - path: ./sonarr/sonarr-compose.yml
   - path: ./radarr/radarr-compose.yml
   - path: ./prowlarr/prowlarr-compose.yml

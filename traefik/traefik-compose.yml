@@ -1,0 +1,36 @@
+services:
+  traefik:
+    image: ${TRAEFIK_IMAGE:-traefik:2.10.4}
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - --configFile=/etc/traefik/traefik.yml
+      - --certificatesresolvers.cloudflare.acme.email=${TRAEFIK_ACME_EMAIL:?TRAEFIK_ACME_EMAIL must be set}
+      - --certificatesresolvers.cloudflare.acme.storage=/etc/traefik/certs/acme.json
+      - --certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.cloudflare.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53
+    environment:
+      CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN:?CF_DNS_API_TOKEN must be set}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${TRAEFIK_CONFIG_ROOT:-./config}/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ${TRAEFIK_CONFIG_ROOT:-./config}/conf:/etc/traefik/conf:ro
+      - ${TRAEFIK_CONFIG_ROOT:-./config}/certs:/etc/traefik/certs
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - frontend
+      - backend
+    labels:
+      - traefik.enable=false
+
+networks:
+  frontend:
+    name: ${TRAEFIK_NETWORK:-frontend}
+    external: true
+  backend:
+    name: ${TAILSCALE_NETWORK:-backend}
+    external: true
