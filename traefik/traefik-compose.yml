@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: ${TRAEFIK_IMAGE:-traefik:2.10.4}
+    image: traefik:2.10.4
     container_name: traefik
     restart: unless-stopped
     command:
