@@ -2,7 +2,8 @@ name: ${COMPOSE_PROJECT_NAME:-media-stack}
 
 # The root compose is intentionally small: each service owns its compose file,
 # configuration mount and local directory. Compose merges all included files
-# into one project while preserving the old `/root/home/media/<service>` layout.
+# into one project while keeping runtime state in ignored service-local config
+# directories.
 #
 # Traefik remains the public entry point. The ARR services share Tailscale's
 # network namespace so their egress uses the configured remote exit node.

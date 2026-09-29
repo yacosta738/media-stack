@@ -20,6 +20,7 @@ The services are intentionally componentized by directory:
 ├── traefik/traefik-compose.yml     # public HTTP/HTTPS entry point
 ├── traefik/config/                  # static and dynamic Traefik configuration
 ├── tailscale/tailscale-compose.yml # exit-node network namespace
+│   └── config/                      # ignored Tailscale state
 ├── sonarr/sonarr-compose.yml       # service definition
 ├── radarr/radarr-compose.yml
 ├── prowlarr/prowlarr-compose.yml
@@ -32,6 +33,10 @@ service directory can also carry its ignored `config/` directory when this repo
 is deployed directly on the media server. The services use these host paths:
 
 - `${CONFIG_ROOT}/sonarr/config`, `${CONFIG_ROOT}/radarr/config`, etc.
+  With the repository-local layout, set `CONFIG_ROOT=.` so each service stores
+  state in its ignored `config/` directory.
+- `${TS_STATE_DIR}` for persistent Tailscale state; use `./tailscale/config`
+  with the repository-local layout.
 - `${DATA_ROOT}/torrents` for qBittorrent staging
 - `${DATA_ROOT}/movies`, `${DATA_ROOT}/tv`, `${DATA_ROOT}/animes`, `${DATA_ROOT}/music` for libraries
 
