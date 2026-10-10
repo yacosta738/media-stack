@@ -1,6 +1,6 @@
 services:
   bazarr:
-    image: lscr.io/linuxserver/bazarr:1.6.3-development@sha256:917d18d150ffc078b3664d19e8e1c246ae3bc8d14e36f395d390e08c0023c773
+    image: lscr.io/linuxserver/bazarr:1.6.3-development@sha256:017aeadb5526940c888edf5738bc13424badbb43de76700b287e475ae3d2254b
     container_name: bazarr
     network_mode: service:tailscale
     depends_on:
