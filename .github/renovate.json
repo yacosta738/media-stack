@@ -23,6 +23,16 @@
   ],
   "packageRules": [
     {
+      "description": "LinuxServer tags carry an -ls<build> suffix that docker versioning treats as an incompatible suffix, so no updates are detected. Parse the full tag with regex versioning to compare build/revision and keep the -ls tag as the replacement value.",
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "matchPackageNames": [
+        "/^lscr\\.io\\/linuxserver\\/(radarr|sonarr|prowlarr)$/"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)-ls(?<revision>\\d+)$"
+    },
+    {
       "description": "Group non-breaking Docker image updates",
       "matchManagers": [
         "docker-compose"
