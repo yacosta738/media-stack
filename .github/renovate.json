@@ -13,7 +13,9 @@
       "/(^|\\/)[^/]+-compose\\.ya?ml$/"
     ]
   },
-  "dependencyDashboard": true,
+  "dependencyDashboard": {
+    "enabled": true
+  },
   "rebaseWhen": "conflicted",
   "rangeStrategy": "pin",
   "prConcurrentLimit": 3,
